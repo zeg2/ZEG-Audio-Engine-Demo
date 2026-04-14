@@ -1,5 +1,5 @@
 # ZEG Audio Engine Demo
-
+⭐ If you like the idea, consider starring the repo — it helps a lot!
 ZEG Audio Engine is a standalone desktop application focused on fast mixing and mastering for DAWless workflows.
 
 This public demo repository includes selected UI and workflow files from the project, while the full internal audio engine and export pipeline are not included here.
