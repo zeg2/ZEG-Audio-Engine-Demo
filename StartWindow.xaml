@@ -1,0 +1,401 @@
+﻿<Window x:Class="ZEGAudioEngineAI.StartWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ZEGAudioEngineAI"
+        Width="980" Height="520"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize"
+        Background="#05070D"
+        SnapsToDevicePixels="True"
+        UseLayoutRounding="True">
+
+	<Window.Resources>
+
+		<!-- ========= Neon palette ========= -->
+		<SolidColorBrush x:Key="Bg0" Color="#05070D"/>
+		<SolidColorBrush x:Key="PanelBg" Color="#061427"/>
+		<SolidColorBrush x:Key="PanelBg2" Color="#071A2C"/>
+		<SolidColorBrush x:Key="NeonCyan" Color="#00C8FF"/>
+		<SolidColorBrush x:Key="NeonBlue" Color="#2AA8FF"/>
+		<SolidColorBrush x:Key="TextMain" Color="#E6FBFF"/>
+		<SolidColorBrush x:Key="TextDim" Color="#AFC8D8"/>
+
+		<!-- ========= 3D Neon Card Button (full-bleed + sweep, image optional) ========= -->
+		<Style x:Key="NeonCardButtonStyle" TargetType="{x:Type Button}">
+			<Setter Property="Background" Value="Transparent"/>
+			<Setter Property="BorderThickness" Value="0"/>
+			<Setter Property="Padding" Value="0"/>
+			<Setter Property="Cursor" Value="Hand"/>
+			<Setter Property="Focusable" Value="False"/>
+			<Setter Property="SnapsToDevicePixels" Value="True"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Button}">
+						<Grid>
+
+							<!-- OUTER BODY -->
+							<Border x:Name="Outer"
+									CornerRadius="18"
+									BorderThickness="1"
+									BorderBrush="#2AA8FF">
+								<Border.Background>
+									<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+										<GradientStop Color="#14385E" Offset="0"/>
+										<GradientStop Color="#061427" Offset="1"/>
+									</LinearGradientBrush>
+								</Border.Background>
+								<Border.Effect>
+									<DropShadowEffect Color="#00A6FF" BlurRadius="24" ShadowDepth="0" Opacity="0.40"/>
+								</Border.Effect>
+							</Border>
+
+							<!-- INNER SHINE -->
+							<Border x:Name="Inner"
+									CornerRadius="16"
+									Margin="3"
+									Opacity="0.55">
+								<Border.Background>
+									<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+										<GradientStop Color="#2E6CA6" Offset="0"/>
+										<GradientStop Color="#071A2C" Offset="1"/>
+									</LinearGradientBrush>
+								</Border.Background>
+							</Border>
+
+							<!-- GLOW OVERLAY -->
+							<Border x:Name="Glow"
+									CornerRadius="18"
+									BorderThickness="2"
+									BorderBrush="#00C8FF"
+									Opacity="0"
+									IsHitTestVisible="False">
+								<Border.Effect>
+									<DropShadowEffect Color="#00C8FF" BlurRadius="38" ShadowDepth="0" Opacity="0.95"/>
+								</Border.Effect>
+							</Border>
+
+							<!-- FULL-BLEED HOST -->
+							<Border x:Name="Host"
+									CornerRadius="18"
+									ClipToBounds="True"
+									Margin="2">
+								<Grid>
+
+									<!-- Fallback "glass" background (always there) -->
+									<Border x:Name="FallbackBg">
+										<Border.Background>
+											<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+												<GradientStop Color="#163A60" Offset="0"/>
+												<GradientStop Color="#071A2C" Offset="1"/>
+											</LinearGradientBrush>
+										</Border.Background>
+									</Border>
+
+									<!-- OPTIONAL Image layer (HIDDEN until you set Tag) -->
+									<Border x:Name="ImageLayer"
+											Opacity="0"
+											RenderTransformOrigin="0.5,0.5">
+										<Border.RenderTransform>
+											<ScaleTransform x:Name="ImgScale" ScaleX="1" ScaleY="1"/>
+										</Border.RenderTransform>
+										<Border.Background>
+											<ImageBrush ImageSource="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Tag}"
+														Stretch="UniformToFill"
+														AlignmentX="Center"
+														AlignmentY="Center"/>
+										</Border.Background>
+									</Border>
+
+									<!-- Darken overlay for readability -->
+									<Border x:Name="DarkOverlay" Opacity="0.55">
+										<Border.Background>
+											<LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+												<GradientStop Color="#00000000" Offset="0.00"/>
+												<GradientStop Color="#88000000" Offset="0.55"/>
+												<GradientStop Color="#CC000000" Offset="1.00"/>
+											</LinearGradientBrush>
+										</Border.Background>
+									</Border>
+
+									<!-- Subtle vignette -->
+									<Border Opacity="0.40">
+										<Border.Background>
+											<RadialGradientBrush GradientOrigin="0.5,0.35" Center="0.5,0.35" RadiusX="0.9" RadiusY="0.9">
+												<GradientStop Color="#00000000" Offset="0.00"/>
+												<GradientStop Color="#00000000" Offset="0.55"/>
+												<GradientStop Color="#AA000000" Offset="1.00"/>
+											</RadialGradientBrush>
+										</Border.Background>
+									</Border>
+
+									<!-- Glow sweep -->
+									<Rectangle x:Name="Sweep"
+											   Opacity="0"
+											   IsHitTestVisible="False">
+										<Rectangle.Fill>
+											<LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+												<GradientStop Color="#00FFFFFF" Offset="0.0"/>
+												<GradientStop Color="#22BFE9FF" Offset="0.35"/>
+												<GradientStop Color="#66BFE9FF" Offset="0.50"/>
+												<GradientStop Color="#22BFE9FF" Offset="0.65"/>
+												<GradientStop Color="#00FFFFFF" Offset="1.0"/>
+											</LinearGradientBrush>
+										</Rectangle.Fill>
+										<Rectangle.RenderTransform>
+											<TranslateTransform x:Name="SweepX" X="-520"/>
+										</Rectangle.RenderTransform>
+									</Rectangle>
+
+									<!-- Inner neon line -->
+									<Border CornerRadius="16"
+											Margin="10"
+											BorderThickness="1"
+											BorderBrush="#2AA8FF"
+											Opacity="0.30"
+											IsHitTestVisible="False"/>
+
+									<!-- Title + hint -->
+									<Grid Margin="20">
+										<Grid.RowDefinitions>
+											<RowDefinition Height="*"/>
+											<RowDefinition Height="Auto"/>
+										</Grid.RowDefinitions>
+
+										<TextBlock x:Name="TitleTxt"
+												   Text="{TemplateBinding Content}"
+												   FontSize="24"
+												   FontWeight="ExtraBold"
+												   Foreground="#E6FBFF"
+												   HorizontalAlignment="Center"
+												   VerticalAlignment="Center"
+												   TextAlignment="Center">
+											<TextBlock.Effect>
+												<DropShadowEffect Color="#00C8FF" BlurRadius="12" ShadowDepth="0" Opacity="0.75"/>
+											</TextBlock.Effect>
+										</TextBlock>
+
+										<TextBlock x:Name="HintTxt"
+												   Grid.Row="1"
+												   Text="Click to open"
+												   FontSize="13"
+												   Foreground="#AFC8D8"
+												   HorizontalAlignment="Center"
+												   Margin="0,0,0,6"
+												   Opacity="0.9"/>
+									</Grid>
+								</Grid>
+							</Border>
+
+						</Grid>
+
+						<ControlTemplate.Triggers>
+
+							<!-- If Tag is set -> show ImageLayer -->
+							<Trigger Property="Tag" Value="{x:Null}">
+								<Setter TargetName="ImageLayer" Property="Opacity" Value="0"/>
+							</Trigger>
+
+							<!-- Hover: glow + sweep + slight zoom (only if image is visible it zooms, otherwise harmless) -->
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter TargetName="Glow" Property="Opacity" Value="0.85"/>
+								<Setter TargetName="Inner" Property="Opacity" Value="0.75"/>
+
+								<Trigger.EnterActions>
+									<BeginStoryboard>
+										<Storyboard>
+											<DoubleAnimation Storyboard.TargetName="Sweep"
+															 Storyboard.TargetProperty="Opacity"
+															 To="0.60" Duration="0:0:0.10"/>
+
+											<DoubleAnimation Storyboard.TargetName="SweepX"
+															 Storyboard.TargetProperty="X"
+															 From="-520" To="520"
+															 Duration="0:0:0.70"
+															 AccelerationRatio="0.15"
+															 DecelerationRatio="0.20"/>
+
+											<DoubleAnimation Storyboard.TargetName="ImgScale"
+															 Storyboard.TargetProperty="ScaleX"
+															 To="1.03" Duration="0:0:0.18"/>
+											<DoubleAnimation Storyboard.TargetName="ImgScale"
+															 Storyboard.TargetProperty="ScaleY"
+															 To="1.03" Duration="0:0:0.18"/>
+										</Storyboard>
+									</BeginStoryboard>
+								</Trigger.EnterActions>
+
+								<Trigger.ExitActions>
+									<BeginStoryboard>
+										<Storyboard>
+											<DoubleAnimation Storyboard.TargetName="Sweep"
+															 Storyboard.TargetProperty="Opacity"
+															 To="0" Duration="0:0:0.12"/>
+
+											<DoubleAnimation Storyboard.TargetName="SweepX"
+															 Storyboard.TargetProperty="X"
+															 To="-520" Duration="0:0:0"/>
+
+											<DoubleAnimation Storyboard.TargetName="ImgScale"
+															 Storyboard.TargetProperty="ScaleX"
+															 To="1.0" Duration="0:0:0.18"/>
+											<DoubleAnimation Storyboard.TargetName="ImgScale"
+															 Storyboard.TargetProperty="ScaleY"
+															 To="1.0" Duration="0:0:0.18"/>
+										</Storyboard>
+									</BeginStoryboard>
+								</Trigger.ExitActions>
+							</Trigger>
+
+							<!-- Press: push -->
+							<Trigger Property="IsPressed" Value="True">
+								<Setter TargetName="Glow" Property="Opacity" Value="1"/>
+								<Setter TargetName="Outer" Property="RenderTransformOrigin" Value="0.5,0.5"/>
+								<Setter TargetName="Outer" Property="RenderTransform">
+									<Setter.Value>
+										<ScaleTransform ScaleX="0.985" ScaleY="0.985"/>
+									</Setter.Value>
+								</Setter>
+								<Setter TargetName="Inner" Property="RenderTransformOrigin" Value="0.5,0.5"/>
+								<Setter TargetName="Inner" Property="RenderTransform">
+									<Setter.Value>
+										<ScaleTransform ScaleX="0.985" ScaleY="0.985"/>
+									</Setter.Value>
+								</Setter>
+							</Trigger>
+
+							<!-- Disabled -->
+							<Trigger Property="IsEnabled" Value="False">
+								<Setter TargetName="Outer" Property="Opacity" Value="0.45"/>
+								<Setter TargetName="Inner" Property="Opacity" Value="0.35"/>
+								<Setter TargetName="Host" Property="Opacity" Value="0.45"/>
+							</Trigger>
+
+							<!-- When Tag is NOT null -> show image -->
+							<MultiTrigger>
+								<MultiTrigger.Conditions>
+									<Condition Property="Tag" Value="{x:Null}"/>
+									<Condition Property="IsMouseOver" Value="False"/>
+								</MultiTrigger.Conditions>
+								<Setter TargetName="ImageLayer" Property="Opacity" Value="0"/>
+							</MultiTrigger>
+
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<!-- ========= Top neon panel style ========= -->
+		<Style x:Key="NeonPanelBorder" TargetType="Border">
+			<Setter Property="CornerRadius" Value="18"/>
+			<Setter Property="BorderThickness" Value="1"/>
+			<Setter Property="BorderBrush" Value="{StaticResource NeonBlue}"/>
+			<Setter Property="Background" Value="{StaticResource PanelBg}"/>
+			<Setter Property="Padding" Value="18"/>
+			<Setter Property="SnapsToDevicePixels" Value="True"/>
+			<Setter Property="Effect">
+				<Setter.Value>
+					<DropShadowEffect Color="#00A6FF" BlurRadius="28" ShadowDepth="0" Opacity="0.30"/>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+	</Window.Resources>
+
+	<Grid Margin="18">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="14"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+
+		<!-- ===== Header Panel ===== -->
+		<Border Grid.Row="0" Style="{StaticResource NeonPanelBorder}">
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="Auto"/>
+				</Grid.ColumnDefinitions>
+
+				<StackPanel>
+					<TextBlock Text="ZEGAudioEngineAI"
+                               FontSize="30"
+                               FontWeight="ExtraBold"
+                               Foreground="{StaticResource TextMain}"/>
+					<TextBlock Text="Choose a workspace"
+                               Margin="0,4,0,0"
+                               Foreground="{StaticResource TextDim}"
+                               FontSize="14"/>
+				</StackPanel>
+
+				<Border Grid.Column="1"
+                        CornerRadius="12"
+                        BorderThickness="1"
+                        BorderBrush="#173B55"
+                        Background="#071A2C"
+                        Padding="12,10"
+                        VerticalAlignment="Center">
+					<StackPanel>
+						<TextBlock Text="DEMO VERSION"
+                                   Foreground="{StaticResource TextMain}"
+                                   FontSize="14"
+                                   FontWeight="Bold"
+                                   HorizontalAlignment="Center"/>
+						<TextBlock Text="START"
+                                   Foreground="{StaticResource NeonCyan}"
+                                   FontSize="11"
+                                   FontWeight="SemiBold"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,2,0,0"/>
+					</StackPanel>
+				</Border>
+			</Grid>
+		</Border>
+
+		<!-- ===== Main selection area ===== -->
+		<Border Grid.Row="2" Style="{StaticResource NeonPanelBorder}">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="18"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+
+				<TextBlock Grid.Row="0"
+                           Text="MODE SELECT"
+                           FontSize="12"
+                           FontWeight="SemiBold"
+                           Foreground="{StaticResource NeonCyan}"
+                           Opacity="0.95"/>
+
+				<Grid Grid.Row="2">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition/>
+						<ColumnDefinition Width="18"/>
+						<ColumnDefinition/>
+					</Grid.ColumnDefinitions>
+
+					<Button Grid.Column="0"
+                            Height="250"
+                            Content="MIXING SECTION"
+                            Style="{StaticResource NeonCardButtonStyle}"
+                            Click="OpenMixing_Click"/>
+
+					<Button Grid.Column="2"
+                            Height="250"
+                            Content="MASTERING SECTION"
+                            Style="{StaticResource NeonCardButtonStyle}"
+                            Click="OpenMastering_Click"/>
+				</Grid>
+			</Grid>
+		</Border>
+
+		<!-- ===== Footer hint ===== -->
+		<TextBlock Grid.Row="3"
+                   Text="Tip: You can always return here with the BACK button (top-right) inside each section."
+                   Foreground="{StaticResource TextDim}"
+                   Margin="6,10,0,0"
+                   Opacity="0.9"/>
+	</Grid>
+</Window>

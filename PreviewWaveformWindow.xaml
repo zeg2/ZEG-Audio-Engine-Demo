@@ -1,0 +1,51 @@
+﻿<Window x:Class="ZEGAudioEngineAI.PreviewWaveformWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="PREVIEW WAVE"
+        Width="980" Height="220"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="CanResize"
+        Background="#061427"
+        AllowsTransparency="False">
+	<Grid Margin="14">
+		<Border CornerRadius="14"
+                BorderBrush="#2AA8FF"
+                BorderThickness="2"
+                Background="#071A2E"
+                Padding="12">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="10"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+
+				<DockPanel Grid.Row="0">
+					<TextBlock Text="MIX PREVIEW"
+                               Foreground="#E6FBFF"
+                               FontSize="16"
+                               FontWeight="Bold"
+                               DockPanel.Dock="Left"/>
+					<TextBlock x:Name="TimeText"
+                               Text="0.00 / 0.00"
+                               Foreground="#BFE9FF"
+                               FontSize="13"
+                               FontWeight="SemiBold"
+                               DockPanel.Dock="Right"/>
+				</DockPanel>
+
+				<Border Grid.Row="2"
+                        CornerRadius="10"
+                        Background="#0B1F38"
+                        BorderBrush="#163B66"
+                        BorderThickness="1">
+					<Canvas x:Name="WaveCanvas"
+                            SnapsToDevicePixels="True"
+                            MouseLeftButtonDown="WaveCanvas_MouseLeftButtonDown"
+                            MouseMove="WaveCanvas_MouseMove"
+                            MouseLeftButtonUp="WaveCanvas_MouseLeftButtonUp"/>
+				</Border>
+			</Grid>
+		</Border>
+	</Grid>
+</Window>
