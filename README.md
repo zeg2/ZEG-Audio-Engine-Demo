@@ -4,6 +4,8 @@ ZEG Audio Engine is a standalone desktop application focused on fast mixing and 
 
 <img width="3834" height="2014" alt="Screenshot 2026-03-23 121236" src="https://github.com/user-attachments/assets/63c15372-a3cb-4318-bf04-0b81da9196fd" />
 
+<img width="1536" height="1024" alt="ChatGPT Image 16 Απρ 2026, 06_32_58 π μ" src="https://github.com/user-attachments/assets/799e36e7-605f-46e5-8688-5c0b534976fb" />
+
 <img width="3839" height="2018" alt="Screenshot 2026-03-23 121332" src="https://github.com/user-attachments/assets/96a4fc22-948a-43fe-992a-d21601c3cd04" />
 
 
